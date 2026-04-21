@@ -550,7 +550,7 @@ async function fetchContent(){
       const refs=[];
       for(let n=range.start;n<=range.end;n++) refs.push(`${sn}:${n}`);
       const responses=await Promise.all(
-        refs.map(ref=>fetch(`https://api.alquran.cloud/v1/ayah/${ref}/editions/quran-uthmani,en.asad`))
+        refs.map(ref=>fetch(`https://api.alquran.cloud/v1/ayah/${ref}/editions/quran-uthmani,en.hilali`))
       );
       if(responses.some(r=>!r.ok)) throw new Error('One or more ayahs were not found — check the range.');
 
@@ -569,15 +569,11 @@ async function fetchContent(){
       const num=document.getElementById('h-num').value;
       if(!num) throw new Error('Please enter a Hadith number.');
       const bk=BOOKS.find(b=>b.slug===slug);
-      const base='https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/';
-      const [ar,en]=await Promise.all([
-        fetch(`${base}${bk.ara}/hadiths/${num}.min.json`),
-        fetch(`${base}${bk.eng}/hadiths/${num}.min.json`)
+      const [arabic,english]=await Promise.all([
+        fetchHadithEditionText([bk.ara,`${bk.ara}1`],num,true),
+        fetchHadithEditionText([bk.eng,`${bk.eng}1`],num,false)
       ]);
-      if(!ar.ok||!en.ok) throw new Error('Hadith not found — check the book and number.');
-      const [ad,ed]=await Promise.all([ar.json(),en.json()]);
-      const getT=d=>d.text||(d.hadith&&d.hadith[0]&&d.hadith[0].text)||'';
-      fetched={arabic:getT(ad), english:getT(ed)};
+      fetched={arabic, english};
       if(!fetched.arabic) throw new Error('Arabic text unavailable for this entry.');
     }
     document.getElementById('p-ara').textContent=fetched.arabic;
@@ -615,6 +611,34 @@ function parseAyahRange(rawValue,maxAyah){
   if(start>end) throw new Error('Ayah range must be start-end (e.g. 2-5).');
   if(start>maxAyah||end>maxAyah) throw new Error(`This surah has only ${maxAyah} ayahs.`);
   return {start,end};
+}
+
+async function fetchHadithEditionText(editions,hadithNumber,required){
+  const editionList=Array.isArray(editions)?editions:[editions];
+  const urls=[];
+  for(const edition of editionList){
+    urls.push(`https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${edition}/${hadithNumber}.min.json`);
+    urls.push(`https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${edition}/${hadithNumber}.json`);
+  }
+  let lastErr=null;
+  for(const url of urls){
+    try{
+      const r=await fetch(url);
+      if(!r.ok){ lastErr=new Error(`HTTP ${r.status}`); continue; }
+      const d=await r.json();
+      const txt=
+        d.text||
+        (d.hadith&&d.hadith[0]&&d.hadith[0].text)||
+        (d.hadiths&&d.hadiths[0]&&d.hadiths[0].text)||
+        '';
+      if(txt) return txt;
+      lastErr=new Error('No text in hadith payload.');
+    }catch(e){
+      lastErr=e;
+    }
+  }
+  if(required) throw lastErr||new Error('Hadith fetch failed.');
+  return '';
 }
 
 // ═══════════════ SAVE ═══════════════

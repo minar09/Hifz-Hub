@@ -1,9 +1,11 @@
 # Hifz-Hub
 Quran &amp; Hadith Memorizer for Students of Knowledge
 
+![Library](./images/library.png)
+
 Here's the **Hifz Hub** app! 🎉 Here's everything that's packed in:
 
-**📖 Quran** — select any of the 114 surahs from a dropdown + enter a single ayah number or ayah range (example: `2` or `2-5`) → fetches authenticated Arabic (Uthmani script) + English (Asad translation) from the AlQuran.cloud API instantly.
+**📖 Quran** — select any of the 114 surahs from a dropdown + enter a single ayah number or ayah range (example: `2` or `2-5`) → fetches authenticated Arabic (Uthmani script) + English (Hilali & Khan translation) from the AlQuran.cloud API instantly.
 
 **📚 Hadith** — pick from 8 books (Bukhari, Muslim, Abu Dawud, Ibn Majah, Tirmidhi, Nasa'i, Malik, Nawawi 40) + hadith number → fetches both Arabic and English from the fawazahmed0 Hadith API.
 
