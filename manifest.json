@@ -1,0 +1,49 @@
+{
+  "name": "Hifz Hub — Quran & Hadith Memorizer",
+  "short_name": "Hifz Hub",
+  "description": "Personal Quran & Hadith memorization and revision app with flashcards",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b1c12",
+  "theme_color": "#0b1c12",
+  "orientation": "portrait-primary",
+  "lang": "en",
+  "categories": ["education", "lifestyle"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/favicon.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Add New Entry",
+      "short_name": "Add",
+      "description": "Add a new Quran ayah or Hadith",
+      "url": "./index.html#add",
+      "icons": [{"src": "icons/icon-192.png", "sizes": "192x192"}]
+    },
+    {
+      "name": "Start Revision",
+      "short_name": "Revise",
+      "description": "Start a flashcard revision session",
+      "url": "./index.html#revise",
+      "icons": [{"src": "icons/icon-192.png", "sizes": "192x192"}]
+    }
+  ]
+}
