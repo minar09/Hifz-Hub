@@ -733,7 +733,7 @@ const BOOKS=[
   {slug:'tirmidhi',name:"Jami' At-Tirmidhi",eng:'eng-tirmidhi',ara:'ara-tirmidhi'},
   {slug:'nasai',name:"Sunan An-Nasa'i",eng:'eng-nasai',ara:'ara-nasai'},
   {slug:'malik',name:'Muwatta Malik',eng:'eng-malik',ara:'ara-malik'},
-  {slug:'nawawi40',name:"Imam Nawawi's 40 Hadith",eng:'eng-nawawi40',ara:'ara-nawawi40'},
+  {slug:'nawawi40',name:"Imam Nawawi's 40 Hadith",eng:'eng-nawawi',ara:'ara-nawawi'},
 ];
 
 const QURAN_API_BASES=[
@@ -1098,9 +1098,11 @@ async function fetchHadithByRef(bookSlug,hadithNumber){
   const bk=BOOKS.find(b=>b.slug===bookSlug);
   if(!bk) throw new Error('Invalid hadith book selected.');
   const [arabic,english]=await Promise.all([
-    fetchHadithEditionText([bk.ara,`${bk.ara}1`],hadithNumber,true),
+    fetchHadithEditionText([bk.ara,`${bk.ara}1`],hadithNumber,false),
     fetchHadithEditionText([bk.eng,`${bk.eng}1`],hadithNumber,false)
   ]);
+  if(!arabic) arabic = english;
+  if(!arabic) throw new Error('No text available for this entry.');
   return {arabic, english};
 }
 
